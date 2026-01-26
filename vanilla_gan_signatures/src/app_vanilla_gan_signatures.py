@@ -9,6 +9,10 @@ import torch
 import torchvision.utils as vutils
 import numpy as np
 import os
+import sys
+# Add project root to path so 'from src...' imports work
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.generator_vanilla_gan import Generator
 import torchvision.transforms as transforms
 from PIL import Image

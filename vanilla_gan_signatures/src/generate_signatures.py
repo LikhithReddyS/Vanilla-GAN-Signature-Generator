@@ -8,6 +8,10 @@ import argparse
 import torch
 import torchvision.utils as vutils
 import os
+import sys
+# Add project root to path so 'from src...' imports work
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.generator_vanilla_gan import Generator
 
 def generate(args):

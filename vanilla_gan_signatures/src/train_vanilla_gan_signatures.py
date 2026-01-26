@@ -11,6 +11,10 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
+import sys
+# Add project root to path so 'from src...' imports work
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.vanilla_gan_model import VanillaGAN
 from src.data_loader_signatures import get_data_loader
 from src.utils.logger import Logger

@@ -29,10 +29,12 @@ class SignatureDataset(Dataset):
         
         self.transform = transform
         
-        # Default transform if none provided: Grayscale, Tensor, Normalize [-1, 1]
+        # Default transform if none provided: Grayscale, Resize, CenterCrop, Tensor, Normalize [-1, 1]
         if self.transform is None:
             self.transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
+                transforms.Resize(64),
+                transforms.CenterCrop(64),
                 transforms.ToTensor(),
                 transforms.Normalize((0.5,), (0.5,)) # Normalize [0,1] to [-1,1]
             ])

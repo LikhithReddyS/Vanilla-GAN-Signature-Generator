@@ -8,6 +8,12 @@ import argparse
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+
+import sys
+import os
+# Add project root to path so 'from src...' imports work
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.signature_verifier_train import SimpleVerifier
 from src.data_loader_signatures import SignatureDataset
 from src.utils.metrics import compute_eer

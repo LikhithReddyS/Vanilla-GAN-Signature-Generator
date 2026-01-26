@@ -10,6 +10,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, ConcatDataset
+
+import sys
+# Add project root to path so 'from src...' imports work
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.data_loader_signatures import SignatureDataset
 
 class SimpleVerifier(nn.Module):
