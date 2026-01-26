@@ -34,9 +34,15 @@ def main():
     st.title("Vanilla GAN Signature Generator")
     st.markdown("Generate synthetic 64x64 grayscale handwritten signatures using a trained Vanilla GAN.")
     
+    # Determine default checkpoint path relative to this script
+    # Script is in vanilla_gan_signatures/src/
+    # Checkpoints are in vanilla_gan_signatures/checkpoints/
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    default_ckpt_path = os.path.join(base_dir, "checkpoints", "generator_final.pth")
+    
     # Sidebar Controls
     st.sidebar.header("Configuration")
-    checkpoint_path = st.sidebar.text_input("Checkpoint Path", value="checkpoints/generator_final.pth")
+    checkpoint_path = st.sidebar.text_input("Checkpoint Path", value=default_ckpt_path)
     num_signatures = st.sidebar.slider("Number of Signatures", min_value=1, max_value=100, value=8)
     
     generate_btn = st.sidebar.button("Generate Signatures")
@@ -46,6 +52,7 @@ def main():
     z_dim = 100
     
     if generate_btn:
+
         generator = load_generator(checkpoint_path, z_dim, device)
         
         if generator:
