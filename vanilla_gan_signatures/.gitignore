@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Generated Data and Logs
+checkpoints/
+data/
+figures/
+logs/
+samples/
+
+# Tools
+.gradio/
+# Keep .streamlit config if it doesn't have secrets, usually fine.
+# .streamlit/ 
