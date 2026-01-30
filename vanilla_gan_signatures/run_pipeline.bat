@@ -9,8 +9,8 @@ python -m src.preprocess_signatures --input_dir "D:\python\GAN SKILL PROJECT-2\s
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 REM 2. Training
-echo [2/5] Training GAN (100 epochs)...
-python -m src.train_vanilla_gan_signatures --epochs 100 --batch_size 64 --data_dir "data/processed"
+echo [2/5] Training GAN (1000 epochs)...
+python -m src.train_vanilla_gan_signatures --epochs 1000 --batch_size 64 --data_dir "data/processed"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 REM 3. Generation

@@ -61,7 +61,7 @@ class SignatureDataset(Dataset):
             # Returning zeros to avoid breaking the batch
             return torch.zeros((1, 64, 64))
 
-def get_data_loader(data_dir, batch_size=32, num_workers=2, shuffle=True):
+def get_data_loader(data_dir, batch_size=32, num_workers=2, shuffle=True, pin_memory=False):
     """
     Helper function to get DataLoader.
     
@@ -70,10 +70,12 @@ def get_data_loader(data_dir, batch_size=32, num_workers=2, shuffle=True):
         batch_size (int): Batch size.
         num_workers (int): Number of worker threads.
         shuffle (bool): Whether to shuffle data.
+        pin_memory (bool): Use pinned memory for faster GPU transfer.
         
     Returns:
         DataLoader: PyTorch DataLoader.
     """
     dataset = SignatureDataset(data_dir)
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+    loader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, 
+                        num_workers=num_workers, pin_memory=pin_memory)
     return loader

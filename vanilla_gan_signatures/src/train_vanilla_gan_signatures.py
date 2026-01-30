@@ -32,11 +32,17 @@ def train(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
     
-    # Data Loader
+    # Enable cudnn benchmark for faster training (if using GPU)
+    if torch.cuda.is_available():
+        torch.backends.cudnn.benchmark = True
+        print("CUDNN benchmark enabled for faster training")
+    
+    # Data Loader - use pin_memory for faster GPU transfer
     dataloader = get_data_loader(
         args.data_dir, 
         batch_size=args.batch_size, 
-        num_workers=args.num_workers
+        num_workers=args.num_workers,
+        pin_memory=torch.cuda.is_available()
     )
     
     # Model
@@ -111,15 +117,16 @@ def train(args):
             G_losses.append(g_loss.item())
             D_losses.append(d_loss.item())
             
-            # Logging
-            if i % 50 == 0:
+            # Logging - reduced frequency for speed
+            if i % 100 == 0:
                 print(f"[Epoch {epoch}/{args.epochs}] [Batch {i}/{len(dataloader)}] [D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
                 logger.log(epoch, i, d_loss.item(), g_loss.item())
         
         # End of Epoch
-        # Save samples
-        save_path = os.path.join(args.sample_dir, f"epoch_{epoch}.png")
-        save_sample_images(generator, fixed_noise, device, save_path)
+        # Save samples every 10 epochs (instead of every epoch) for speed
+        if (epoch + 1) % 10 == 0 or epoch == 0:
+            save_path = os.path.join(args.sample_dir, f"epoch_{epoch}.png")
+            save_sample_images(generator, fixed_noise, device, save_path)
         
         # Save Checkpoint
         if (epoch + 1) % args.checkpoint_interval == 0:
@@ -136,7 +143,7 @@ def train(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--epochs", type=int, default=100, help="number of epochs")
+    parser.add_argument("--epochs", type=int, default=1000, help="number of epochs")
     parser.add_argument("--batch_size", type=int, default=64, help="batch size")
     parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")
     parser.add_argument("--beta1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")
