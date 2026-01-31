@@ -1,7 +1,7 @@
 """
 Vanilla GAN Generator
 =====================
-Generator architecture for 64x64 signature generation.
+Generator architecture for 128x128 signature generation.
 """
 
 import torch
@@ -22,25 +22,27 @@ class Generator(nn.Module):
         self.l1 = nn.Sequential(
             nn.Linear(z_dim, self.feature_maps * self.init_size ** 2),
             nn.BatchNorm1d(self.feature_maps * self.init_size ** 2), # Optional for linear, but helpful
-            nn.ReLU(True)
+            nn.LeakyReLU(True)
         )
         
         self.conv_blocks = nn.Sequential(
             # 4x4 -> 8x8
             nn.ConvTranspose2d(self.feature_maps, 256, kernel_size=4, stride=2, padding=1),
             nn.BatchNorm2d(256),
-            nn.ReLU(True),
+            nn.LeakyReLU(True),
             
             # 8x8 -> 16x16
             nn.ConvTranspose2d(256, 128, kernel_size=4, stride=2, padding=1),
             nn.BatchNorm2d(128),
-            nn.ReLU(True),
+            nn.SELU(True),
             
             # 16x16 -> 32x32
             nn.ConvTranspose2d(128, 64, kernel_size=4, stride=2, padding=1),
             nn.BatchNorm2d(64),
-            nn.ReLU(True),
-            
+            nn.LeakyReLU(True),
+            nn.ConvTranspose2d(64, 64, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(True),
             # 32x32 -> 64x64
             nn.ConvTranspose2d(64, im_channels, kernel_size=4, stride=2, padding=1),
             nn.Tanh() # Output in [-1, 1]

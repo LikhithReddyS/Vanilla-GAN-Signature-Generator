@@ -33,8 +33,8 @@ class SignatureDataset(Dataset):
         if self.transform is None:
             self.transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
-                transforms.Resize(64),
-                transforms.CenterCrop(64),
+                transforms.Resize(128),
+                transforms.CenterCrop(128),
                 transforms.ToTensor(),
                 transforms.Normalize((0.5,), (0.5,)) # Normalize [0,1] to [-1,1]
             ])
@@ -59,7 +59,7 @@ class SignatureDataset(Dataset):
             # Return a dummy tensor or handle error appropriately. 
             # For simplicity in training loops, we might want to just skip or return zeros.
             # Returning zeros to avoid breaking the batch
-            return torch.zeros((1, 64, 64))
+            return torch.zeros((1, 128, 128))
 
 def get_data_loader(data_dir, batch_size=32, num_workers=2, shuffle=True, pin_memory=False):
     """

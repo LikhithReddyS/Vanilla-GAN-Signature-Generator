@@ -1,7 +1,7 @@
 """
 Vanilla GAN Discriminator
 =========================
-Discriminator architecture for 64x64 signature generation.
+Discriminator architecture for 128x128 signature generation.
 """
 
 import torch
@@ -11,25 +11,30 @@ class Discriminator(nn.Module):
     def __init__(self, im_channels=1):
         super(Discriminator, self).__init__()
         
-        # Input 64x64
+        # Input 128x128
         self.conv_blocks = nn.Sequential(
-            # 64x64 -> 32x32
+            # 128x128 -> 64x64
             nn.Conv2d(im_channels, 64, kernel_size=4, stride=2, padding=1),
             nn.LeakyReLU(0.2, inplace=True),
             # (No BatchNorm in the first layer usually)
             
-            # 32x32 -> 16x16
+            # 64x64 -> 32x32
             nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
             nn.BatchNorm2d(128),
             nn.LeakyReLU(0.2, inplace=True),
             
-            # 16x16 -> 8x8
+            # 32x32 -> 16x16
             nn.Conv2d(128, 256, kernel_size=4, stride=2, padding=1),
             nn.BatchNorm2d(256),
             nn.LeakyReLU(0.2, inplace=True),
             
-            # 8x8 -> 4x4
+            # 16x16 -> 8x8
             nn.Conv2d(256, 512, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(512),
+            nn.LeakyReLU(0.2, inplace=True),
+            
+            # 8x8 -> 4x4
+            nn.Conv2d(512, 512, kernel_size=4, stride=2, padding=1),
             nn.BatchNorm2d(512),
             nn.LeakyReLU(0.2, inplace=True)
         )
@@ -42,7 +47,7 @@ class Discriminator(nn.Module):
         )
     
     def forward(self, img):
-        # img: (batch, channels, 64, 64)
+        # img: (batch, channels, 128, 128)
         out = self.conv_blocks(img)
         out = out.view(out.shape[0], -1) # Flatten
         validity = self.adv_layer(out)
@@ -50,7 +55,7 @@ class Discriminator(nn.Module):
 
 if __name__ == '__main__':
     # Simple test
-    img = torch.randn(10, 1, 64, 64)
+    img = torch.randn(10, 1, 128, 128)
     disc = Discriminator()
     out = disc(img)
     print(f"Discriminator output shape: {out.shape}")

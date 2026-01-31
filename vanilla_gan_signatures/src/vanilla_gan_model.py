@@ -1,7 +1,7 @@
 """
 Vanilla GAN Model Wrapper
 =========================
-Wrapper class to handle Generator and Discriminator interaction.
+Wrapper  class to handle Generator and Discriminator interaction.
 """
 
 import torch
