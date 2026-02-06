@@ -123,11 +123,12 @@ def train(args):
                 logger.log(epoch, i, d_loss.item(), g_loss.item())
         
         # End of Epoch
-        # Save samples every 10 epochs (instead of every epoch) for speed
-        if (epoch + 1) % 10 == 0 or epoch == 0:
+        # Save and show samples at specified interval
+        if (epoch + 1) % args.sample_interval == 0 or epoch == 0:
             save_path = os.path.join(args.sample_dir, f"epoch_{epoch}.png")
             save_sample_images(generator, fixed_noise, device, save_path, 
                              show_in_colab=args.show_images, epoch=epoch)
+            print(f"📸 Saved sample images for epoch {epoch}")
         
         # Save Checkpoint
         if (epoch + 1) % args.checkpoint_interval == 0:
@@ -156,6 +157,7 @@ if __name__ == '__main__':
     parser.add_argument("--log_dir", type=str, default="logs", help="path to save logs")
     parser.add_argument("--figures_dir", type=str, default="figures", help="path to save figures")
     parser.add_argument("--checkpoint_interval", type=int, default=10, help="interval between model checkpoints")
+    parser.add_argument("--sample_interval", type=int, default=10, help="interval between sample image generation")
     parser.add_argument("--show_images", action="store_true", help="show images inline (for Colab/Jupyter)")
     
     args = parser.parse_args()

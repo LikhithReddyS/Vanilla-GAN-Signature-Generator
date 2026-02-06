@@ -30,7 +30,10 @@ def save_sample_images(generator, z, device, save_path, show_in_colab=False, epo
 def display_sample_images(images, epoch=None):
     """
     Display a grid of images inline (for Colab/Jupyter).
+    Uses IPython.display for immediate real-time display during training.
     """
+    import sys
+    
     # Make grid
     grid = vutils.make_grid(images, normalize=True, padding=2)
     # Convert to numpy for matplotlib
@@ -41,7 +44,16 @@ def display_sample_images(images, epoch=None):
     plt.title(title, fontsize=14)
     plt.imshow(grid_np, cmap='gray')
     plt.axis('off')
-    plt.show()
+    
+    # Use IPython display for immediate output in Colab
+    try:
+        from IPython.display import display, clear_output
+        plt.show()
+        sys.stdout.flush()  # Force output to appear immediately
+    except ImportError:
+        plt.show()
+    
+    plt.close()  # Close figure to free memory
 
 def save_loss_plot(d_losses, g_losses, save_path):
     """
